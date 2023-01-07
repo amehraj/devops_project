@@ -63,10 +63,27 @@ services:
     depends_on:
       - rabbitmq
     ports:
-      - 8080:8080
+      - 8081:8081
     build:
       dockerfile: Dockerfile
       context: ./HTTPSERV
+    networks:
+      - local
+    volumes:
+      - ${PWD}/public:/app/public
+  apigw:
+    image: "ntamle/apigw"
+    hostname: "apigw"
+    restart: on-failure
+    command: sh -c "npm start"
+    depends_on:
+      - rabbitmq
+      - httpserv
+    ports:
+      - 8083:8083
+    build:
+      dockerfile: Dockerfile
+      context: ./APIGW
     networks:
       - local
     volumes:
