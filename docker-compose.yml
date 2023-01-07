@@ -1,0 +1,76 @@
+version: "3"
+
+services:
+  rabbitmq:
+     image: rabbitmq:3-management
+     hostname: "rabbitmq"
+     environment:
+       RABBITMQ_DEFAULT_VHOST: "/"
+     ports:
+       - "15672:15672"
+       - "5672:5672"
+     expose:
+       - 5672
+       - 15672
+     networks:
+       - local
+  orig:
+    image: "ntamle/orig"
+    hostname: "orig"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+      - imed
+      - obse
+      - httpserv
+    command: sh -c "./wait-for-it.sh rabbitmq:5672 && npm start"
+    build:
+      dockerfile: Dockerfile
+      context: ./ORIG
+    networks:
+      - local
+  imed:
+    image: "ntamle/imed"
+    hostname: "imed"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    command: sh -c "./wait-for-it.sh rabbitmq:5672 && npm start"
+    build:
+      dockerfile: Dockerfile
+      context: ./IMED
+    networks:
+      - local 
+  obse:
+    image: "ntamle/obse"
+    hostname: "obse"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    command: sh -c "./wait-for-it.sh rabbitmq:5672 && npm start"
+    build:
+      dockerfile: Dockerfile
+      context: ./OBSE
+    volumes:
+      - ${PWD}/public:/app/public
+    networks:
+      - local 
+  httpserv:
+    image: "ntamle/httpserv"
+    hostname: "httpserv"
+    restart: on-failure
+    command: sh -c "./wait-for-it.sh rabbitmq:5672 && npm start"
+    depends_on:
+      - rabbitmq
+    ports:
+      - 8080:8080
+    build:
+      dockerfile: Dockerfile
+      context: ./HTTPSERV
+    networks:
+      - local
+    volumes:
+      - ${PWD}/public:/app/public
+networks:
+  local:
+    driver: bridge
