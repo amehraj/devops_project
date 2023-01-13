@@ -3,7 +3,16 @@ const timers = require('timers-promises')
 const exchangeName = "topic_logs";
 const msg = 'MSG';
 const key = 'compse140.o';
-const messageCount = 0;
+var messageCount = 0;
+let currentState = "RUNNING";
+const express = require('express');
+const app = express();
+const http = require('http');
+const bodyParser = require('body-parser')
+const port = 8082;
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Sending a message to topic compse140.o
 const sendMsg = async (message) => {
@@ -17,15 +26,35 @@ const sendMsg = async (message) => {
 // Start operation with message count. Message count is incremented before sending a message.
 const start = async (messageCount) => {
     await timers.setTimeout(5000);
-    let count = messageCount;
-    count++;
-    await sendMsg(msg + "_" + count);
-    await timers.setTimeout(3000);
-    count++;
-    await sendMsg(msg + "_" + count);
-    await timers.setTimeout(3000);
-    count++;
-    await sendMsg(msg + "_" + count);
+
+    while(currentState === "RUNNING"){
+            messageCount++;
+            updateMessageCount(messageCount)
+            await sendMsg(msg + "_" + messageCount);
+            await timers.setTimeout(3000);
+            
+    }
+
 }
+
+const updateMessageCount = (count) => {
+    messageCount = count
+}
+
+app.put('/changeState', async (req, res) => {
+    const { state } = req.body
+    if (state !== currentState){
+        currentState = state
+        console.log(currentState)
+        start(messageCount)
+        console.log("Process started")
+    }
+    res.send(currentState)
+})
+
+app.listen(port, () => {  
+    console.log(`App listening on port ${port}`)
+})
+
 
 start(messageCount)

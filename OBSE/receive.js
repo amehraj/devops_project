@@ -7,12 +7,6 @@ const fs = require('fs');
 
 // Receive messages from both compse140.o and compse140.i
 const recieveMsg = async () => {
-    //empty the existing file
-    fs.truncate('./public/file.txt', 0, err => {
-      if (err) {
-        console.error(err);
-      }
-    });
     let messageCount = 0;
     const connection = await amqplib.connect('amqp://rabbitmq');
     const channel = await connection.createChannel();
