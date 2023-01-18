@@ -1,0 +1,32 @@
+default:
+  image: docker/compose:latest
+before_script:
+  - apk add --update nodejs npm
+  
+DockerSetup:
+
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+
+  # Official docker compose image.
+  image:
+    name: docker/compose:latest
+
+  services:
+    - docker:dind
+
+  before_script:
+    - docker version
+    - docker-compose version
+
+  stage: build
+  script:
+    - apk add --update nodejs npm
+    - docker-compose down
+    - docker-compose build
+    - docker-compose up -d 
+    - cd tests/ && npm install
+    - npm run test
+    
+

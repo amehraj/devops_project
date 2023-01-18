@@ -35,7 +35,6 @@ const start = async (messageCount) => {
             updateMessageCount(messageCount)
             await sendMsg(msg + "_" + messageCount);
             await timers.setTimeout(3000);
-            
     }
 
 }
