@@ -49,31 +49,17 @@ app.put('/state', async (req, res) => {
         console.log('Req body:', response.data)
         console.log('Req header :', response.headers)
         data = response.data
+        updateState(data)
     })
     .catch((e) => {
       console.error(e)
     })
-  // const request = http.request({
-  //   host: 'orig',
-  //   port: 8082,
-  //   path: '/changeState',
-  //   method: 'PUT',
-  //   headers: {
-      
-  //   }
-  // }, function(response) {
-  //   var data = '';
-  //   response.setEncoding('utf8');
-  //   response.on('data', (chunk) => {
-  //     data += chunk;
-  //   });
-  //   response.on('end', () => {
-  //     res.end(data);
-  //   });
-  // });
-  // request.end();
   res.end(data)
 })
+
+const updateState = (data) => {
+  state = data
+}
 
 app.get('/state', async (req, res) => {
     console.log(state);
