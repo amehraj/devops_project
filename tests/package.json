@@ -1,0 +1,20 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tests.js",
+  "type": "module",
+  "scripts": {
+    "test": "mocha tests.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^10.2.0"
+  },
+  "dependencies": {
+    "axios": "^1.2.3",
+    "chai": "^4.3.7",
+    "timers-promises": "^1.0.1"
+  }
+}
