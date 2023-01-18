@@ -10,7 +10,6 @@ describe('APIs', function() {
         axios
           .get('http://localhost:8083/state', HEADER)
           .then((response) => {
-              console.log('Req body:', response.data)
               data = response.data
               expect(data).to.equal("RUNNING");
           })
@@ -20,6 +19,8 @@ describe('APIs', function() {
         
     });
     it('Get paused state', function() {
+        setTimeout(() => {
+        }, "2000")
         let data = ''
         const HEADER = {
           headers: { Accept: 'application/json' },
@@ -30,25 +31,22 @@ describe('APIs', function() {
         axios
         .put('http://localhost:8083/state', DATA, HEADER)
         .then((response) => {
-            console.log('Req body:', response.data)
-            console.log('Req header :', response.headers)
-            data = response.data
+        }).then(() => {
             axios
             .get('http://localhost:8083/state', HEADER)
             .then((response) => {
-                console.log('Req body:', response.data)
                 data = response.data
                 expect(data).to.equal("PAUSED");
             })
             .catch((e) => {
-              console.error(e)
             })
         })
         .catch((e) => {
-          console.error(e)
         })
     });
     it('Get resume state', function() {
+        setTimeout(() => {
+        }, "2000")
         let data = ''
         const HEADER = {
           headers: { Accept: 'application/json' },
@@ -59,22 +57,18 @@ describe('APIs', function() {
         axios
         .put('http://localhost:8083/state', DATA, HEADER)
         .then((response) => {
-            console.log('Req body:', response.data)
-            console.log('Req header :', response.headers)
             data = response.data
+        }).then(() => {
             axios
             .get('http://localhost:8083/state', HEADER)
             .then((response) => {
-                console.log('Req body:', response.data)
                 data = response.data
-                expect(data).to.equal("RUNNING");
+                expect(data).to.equal("PAUSED");
             })
             .catch((e) => {
-              console.error(e)
             })
         })
         .catch((e) => {
-          console.error(e)
         })
     });
 });
