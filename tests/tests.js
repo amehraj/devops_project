@@ -2,23 +2,12 @@ import { expect } from 'chai';
 import axios from 'axios';
 
 describe('APIs', function() {
-    it('Get running state', function() {
-        let data = ''
-        const HEADER = {
-          headers: { Accept: 'text/plain' },
-        }
-        axios
-          .get('http://localhost:8083/state', HEADER)
-          .then((response) => {
-              data = response.data
-              expect(data).to.equal("RUNNING");
-          })
-          .catch((e) => {
-            console.error(e)
-          })
+    it('Get running state', async function() {
+        const response = await axios.get("http://localhost:8083/state")
+        expect(response.data).to.equal("RUNNING");
         
     });
-    it('Get paused state', function() {
+    it('Get paused state', async function() {
         setTimeout(() => {
         }, "2000")
         let data = ''
@@ -28,23 +17,11 @@ describe('APIs', function() {
         const DATA = {
             "state" : "PAUSED"
         }
-        axios
-        .put('http://localhost:8083/state', DATA, HEADER)
-        .then((response) => {
-        }).then(() => {
-            axios
-            .get('http://localhost:8083/state', HEADER)
-            .then((response) => {
-                data = response.data
-                expect(data).to.equal("PAUSED");
-            })
-            .catch((e) => {
-            })
-        })
-        .catch((e) => {
-        })
+        const response = await axios.put("http://localhost:8083/state", DATA, HEADER)
+        const response2 = await axios.get("http://localhost:8083/state")
+        expect(response2.data).to.equal("PAUSED");
     });
-    it('Get resume state', function() {
+    it('Get resume state', async function() {
         setTimeout(() => {
         }, "2000")
         let data = ''
@@ -54,21 +31,7 @@ describe('APIs', function() {
         const DATA = {
             "state" : "RUNNING"
         }
-        axios
-        .put('http://localhost:8083/state', DATA, HEADER)
-        .then((response) => {
-            data = response.data
-        }).then(() => {
-            axios
-            .get('http://localhost:8083/state', HEADER)
-            .then((response) => {
-                data = response.data
-                expect(data).to.equal("PAUSED");
-            })
-            .catch((e) => {
-            })
-        })
-        .catch((e) => {
-        })
+        const response = await axios.put("http://localhost:8083/state", DATA, HEADER)
+        const response2 = await axios.get("http://localhost:8083/state")
     });
 });
