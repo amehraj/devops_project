@@ -15,14 +15,13 @@ DockerSetup:
 
   services:
     - docker:dind
-
   before_script:
     - docker version
     - docker-compose version
+    - apk add --update nodejs npm
 
   stage: build
   script:
-    - apk add --update nodejs npm
     - docker-compose down
     - docker-compose build
     - docker-compose up -d 
