@@ -4,7 +4,7 @@ const exchangeName = "topic_logs";
 const msg = 'MSG';
 const key = 'compse140.o';
 var messageCount = 0;
-let currentState = "RUNNING";
+let currentState = "INIT";
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -25,7 +25,10 @@ const sendMsg = async (message) => {
 
 // Start operation with message count. Message count is incremented before sending a message.
 const start = async (messageCount) => {
-    await timers.setTimeout(5000);
+    if(currentState === "INIT"){
+        await timers.setTimeout(5000);
+        currentState = "RUNNING"
+    }
 
     while(currentState === "RUNNING"){
             messageCount++;

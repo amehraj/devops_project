@@ -49,6 +49,7 @@ app.put('/state', async (req, res) => {
         console.log('Req body:', response.data)
         console.log('Req header :', response.headers)
         data = response.data
+        console.log(data)
         updateState(data)
     })
     .catch((e) => {
