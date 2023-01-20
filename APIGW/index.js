@@ -55,7 +55,8 @@ app.put('/state', async (req, res) => {
     .catch((e) => {
       console.error(e)
     })
-  res.end(data)
+  console.log(state)
+  res.end(state)
 })
 
 const updateState = (data) => {
